@@ -85,22 +85,23 @@ class dictionary:
         print('UPDATE SUCCESSFUL')
         c.close()
         
-    def query(self, query_word = 'a'):
+    def query(self, query_word):
         conn = sqlite3.connect('atang_dictionary.db')
         c = conn.cursor()
-        # result = c.execute("SELECT Chinese_definition FROM dictionary WHERE word=?", query_word)
-        while True:
-            # c.execute('SELECT * from dictionary WHERE word=?', query_word)
-            if c.fetchone() is not None:
+        
+        # 开始没有理解完全 fetchone() 这个方法，它取的是sql查询后的集合的下一行序列数据。所以每次执行 c.execute() 语句后，cursor的位置会往下移动一行。因此，在每次需要取值的时候需要重新执行 c.execute() 语句
+        if c.execute("SELECT * FROM dictionary WHERE word=?", (query_word,)) is not None:
+            if c.fetchone()[2] != '':
+                c.execute("SELECT * FROM dictionary WHERE word=?", (query_word,))     
+                print((c.fetchone()[2]))
+            else: 
+                print('The value is None')
                 print(c.fetchone())
-                print(c.fetchone()[2])
-            else:
                 print('Sorry there is no {} definition!'.format(self.word))
                 print('*'*99)
                 print('Please add the meaning of this word.')
                 definition = input()
                 self.update(definition)
-            break
             
         c.close()
         
@@ -109,7 +110,7 @@ if __name__ == "__main__":
     # 开始时实例对象没有传递参数
     new_dictionary = dictionary(sys.argv[1])
     
-    new_dictionary.query()
+    new_dictionary.query(sys.argv[1])
  
     
     
