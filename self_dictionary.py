@@ -11,6 +11,7 @@ import sqlite3
 # initial dictionary with 370101 english words with id
 
     
+alphabet = ['a', 'b', 'c', 'd', 'e', 'f', 'g', 'h', 'i', 'j', 'k', 'l', 'm', 'n','o', 'p', 'q', 'r', 's', 't', 'u', 'v', 'w', 'x', 'y', 'z', 'A', 'B', 'C', 'D', 'E', 'F', 'G', 'H', 'I', 'J', 'K', 'L', 'M', 'N', 'O', 'P', 'Q', 'R', 'S', 'T', 'U', 'V', 'W', 'X', 'Y', 'Z']
 
 # manipulate the dictionary which exist
 class dictionary:
@@ -73,17 +74,26 @@ class dictionary:
     
     def delete(self):
         print('This is delete method')
-        
+       
+
     def update(self, update_definition):
         conn = sqlite3.connect('atang_dictionary.db')
         c = conn.cursor()
         update_word = (update_definition, self.word)
         print(self.word)
         print(update_definition)
-        c.execute('UPDATE dictionary SET definition=? WHERE word=?', update_word)
-        conn.commit()
-        print('UPDATE SUCCESSFUL')
-        c.close()
+        if update_definition[0] in alphabet:
+
+            c.execute('UPDATE dictionary SET definition=? WHERE word=?', update_word)
+            conn.commit()
+            print('UPDATE English definition SUCCESSFUL')
+            c.close()
+        else:
+            c.execute('UPDATE dictionary SET Chinese_definition=? WHERE word=?', update_word)
+            conn.commit()
+            print('更新中文释义成功')
+            c.close()
+
         
     def query(self, query_word):
         conn = sqlite3.connect('atang_dictionary.db')
@@ -94,14 +104,25 @@ class dictionary:
 
             # 刚开始以为 fetchone()[2] 返回的None这个值，判断语句一直出问题，经过几次print语句的调试后，才发现 fetchone()[2] 返回的是str类型的空字符串 '', 修改后判断正确。
             if c.fetchone()[2] != '':
+                # get english definition
                 c.execute("SELECT * FROM dictionary WHERE word=?", (query_word,))     
-                print((c.fetchone()[2]))
+                print("Enlish {}".format((c.fetchone()[2])))
+                 
+                # get Chinese definition                
+                
+                c.execute("SELECT * FROM dictionary WHERE word=?", (query_word,))     
+                if c.fetchone()[3] != '': 
+                    c.execute("SELECT * FROM dictionary WHERE word=?", (query_word,))     
+                    print("中  文 {}".format((c.fetchone()[3])))
+
+                else:
+                    print('没有中文释义，请更新')
+                    Chinese_definition = input()
+                    self.update(Chinese_definition)
+
+
             else: 
-                print('The value is None')
-                print(c.fetchone())
-                print('Sorry there is no {} definition!'.format(self.word))
-                print('*'*99)
-                print('Please add the meaning of this word.')
+                print('Sorry there is no {} English definition! Please add the meaning of this word'.format(self.word))
                 definition = input()
                 self.update(definition)
             
