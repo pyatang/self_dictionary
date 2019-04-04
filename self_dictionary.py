@@ -97,11 +97,12 @@ class dictionary:
         c = conn.cursor()
         
         # 开始没有理解完全 fetchone() 这个方法，它取的是sql查询后的集合的下一行序列数据。所以每次执行 c.execute() 语句后，cursor的位置会往下移动一行。因此，在每次需要取值的时候需要重新执行 c.execute() 语句
-        if c.execute("SELECT * FROM dictionary WHERE word=?", (query_word,)) is not None:
-            retrieve_word = c.fetchone()
+        c.execute("SELECT * FROM dictionary WHERE word=?", (query_word,))
+        retrieve_word = c.fetchone()
+        if retrieve_word is not None:
             def_en = retrieve_word[2]
             def_cn = retrieve_word[3]
-
+            
             # 刚开始以为 fetchone()[2] 返回的None这个值，判断语句一直出问题，经过几次print语句的调试后，才发现 fetchone()[2] 返回的是str类型的空字符串 '', 修改后判断正确。
             if def_en != '' and def_cn != '' :
                 # get english definition
@@ -127,7 +128,8 @@ class dictionary:
                 print("Input English definition")
                 definition = input()
                 self.update(update_def_en=definition, update_def_cn=Chinese_definition)
-
+        else:
+            print("词库没有这个单词!")
             
         c.close()
         
