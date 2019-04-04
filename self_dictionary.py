@@ -76,23 +76,20 @@ class dictionary:
         print('This is delete method')
        
 
-    def update(self, update_definition):
+    def update(self, update_def_cn=None, update_def_en=None):
         conn = sqlite3.connect('atang_dictionary.db')
         c = conn.cursor()
-        update_word = (update_definition, self.word)
-        print(self.word)
-        print(update_definition)
-        if update_definition[0] in alphabet:
+        update_def_cn = (update_def_cn, self.word)
+        update_def_en = (update_def_en, self.word)
 
-            c.execute('UPDATE dictionary SET definition=? WHERE word=?', update_word)
-            conn.commit()
-            print('UPDATE English definition SUCCESSFUL')
-            c.close()
-        else:
-            c.execute('UPDATE dictionary SET Chinese_definition=? WHERE word=?', update_word)
-            conn.commit()
-            print('更新中文释义成功')
-            c.close()
+        c.execute('UPDATE dictionary SET definition=? WHERE word=?', update_def_en)
+        conn.commit()
+        # print('UPDATE English definition SUCCESSFUL')
+        c.execute('UPDATE dictionary SET Chinese_definition=? WHERE word=?', update_def_cn)
+        conn.commit()
+        # print('更新中文释义成功')
+        print("更新成功")
+        c.close()
 
         
     def query(self, query_word):
@@ -101,30 +98,36 @@ class dictionary:
         
         # 开始没有理解完全 fetchone() 这个方法，它取的是sql查询后的集合的下一行序列数据。所以每次执行 c.execute() 语句后，cursor的位置会往下移动一行。因此，在每次需要取值的时候需要重新执行 c.execute() 语句
         if c.execute("SELECT * FROM dictionary WHERE word=?", (query_word,)) is not None:
+            retrieve_word = c.fetchone()
+            def_en = retrieve_word[2]
+            def_cn = retrieve_word[3]
 
             # 刚开始以为 fetchone()[2] 返回的None这个值，判断语句一直出问题，经过几次print语句的调试后，才发现 fetchone()[2] 返回的是str类型的空字符串 '', 修改后判断正确。
-            if c.fetchone()[2] != '':
+            if def_en != '' and def_cn != '' :
                 # get english definition
-                c.execute("SELECT * FROM dictionary WHERE word=?", (query_word,))     
-                print("Enlish: {}".format((c.fetchone()[2])))
-                 
+                print("Enlish: {}".format(def_en))
+                print("中  文: {}".format(def_cn))
+
                 # get Chinese definition                
                 
-                c.execute("SELECT * FROM dictionary WHERE word=?", (query_word,))     
-                if c.fetchone()[3] != '': 
-                    c.execute("SELECT * FROM dictionary WHERE word=?", (query_word,))     
-                    print("中  文: {}".format((c.fetchone()[3])))
+            elif def_en != '' and def_cn == '': 
+                print("没有中文释义，请更新")
+                Chinese_definition = input()
+                self.update(update_def_cn=Chinese_definition)
 
-                else:
-                    print('没有中文释义，请更新')
-                    Chinese_definition = input()
-                    self.update(Chinese_definition)
-
-
-            else: 
-                print('Sorry there is no {} English definition! Please add the meaning of this word'.format(self.word))
+            elif def_en == '' and def_cn != '' :
+                print("No English definition, please update")
                 definition = input()
-                self.update(definition)
+                self.update(update_def_en=definition)
+
+            else:
+                print("既无中文含义，也无英文含义")
+                print("输入中文含义")
+                Chinese_definition = input()
+                print("Input English definition")
+                definition = input()
+                self.update(update_def_en=definition, update_def_cn=Chinese_definition)
+
             
         c.close()
         
