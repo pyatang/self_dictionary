@@ -113,12 +113,12 @@ class dictionary:
             elif def_en != '' and def_cn == '': 
                 print("没有中文释义，请更新")
                 Chinese_definition = input()
-                self.update(update_def_cn=Chinese_definition)
+                self.update(update_def_cn=Chinese_definition, update_def_en=def_en)
 
             elif def_en == '' and def_cn != '' :
                 print("No English definition, please update")
                 definition = input()
-                self.update(update_def_en=definition)
+                self.update(update_def_en=definition, update_def_cn=def_cn)
 
             else:
                 print("既无中文含义，也无英文含义")
