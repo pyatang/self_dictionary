@@ -106,14 +106,14 @@ class dictionary:
             if c.fetchone()[2] != '':
                 # get english definition
                 c.execute("SELECT * FROM dictionary WHERE word=?", (query_word,))     
-                print("Enlish {}".format((c.fetchone()[2])))
+                print("Enlish: {}".format((c.fetchone()[2])))
                  
                 # get Chinese definition                
                 
                 c.execute("SELECT * FROM dictionary WHERE word=?", (query_word,))     
                 if c.fetchone()[3] != '': 
                     c.execute("SELECT * FROM dictionary WHERE word=?", (query_word,))     
-                    print("中  文 {}".format((c.fetchone()[3])))
+                    print("中  文: {}".format((c.fetchone()[3])))
 
                 else:
                     print('没有中文释义，请更新')
