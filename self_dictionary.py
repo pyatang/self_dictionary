@@ -5,6 +5,15 @@
 # 3.添加n
 # 4.用SQLite 存储
 
+''' self_dictionary
+
+This script allows user to look up English word and update the meaning
+
+This tool accept one word look up each time 
+
+'''
+
+
 import sys
 import sqlite3
 
@@ -13,8 +22,21 @@ import sqlite3
     
 alphabet = ['a', 'b', 'c', 'd', 'e', 'f', 'g', 'h', 'i', 'j', 'k', 'l', 'm', 'n','o', 'p', 'q', 'r', 's', 't', 'u', 'v', 'w', 'x', 'y', 'z', 'A', 'B', 'C', 'D', 'E', 'F', 'G', 'H', 'I', 'J', 'K', 'L', 'M', 'N', 'O', 'P', 'Q', 'R', 'S', 'T', 'U', 'V', 'W', 'X', 'Y', 'Z']
 
+
+def help_file():
+     
+    '''\n
+    Introduction to self_dictionary.py 
+    Use -h --help to open the this Help file
+    query function to look up and update definition when there is no definition.
+    '''
+    print('This help function.')
+
+
+
 # manipulate the dictionary which exist
 class dictionary:
+    ''' Dictionary docstring '''
     
     def __init__(self, word=None, Chinese_definition=None):
         self.word = word
@@ -93,6 +115,7 @@ class dictionary:
 
         
     def query(self, query_word):
+        
         conn = sqlite3.connect('atang_dictionary.db')
         c = conn.cursor()
         
@@ -108,7 +131,7 @@ class dictionary:
                 # get english definition
                 print("Enlish: {}".format(def_en))
                 print("中  文: {}".format(def_cn))
-
+        
                 # get Chinese definition                
                 
             elif def_en != '' and def_cn == '': 
@@ -132,13 +155,15 @@ class dictionary:
             print("词库没有这个单词!")
             
         c.close()
-        
-        
-if __name__ == "__main__":
+
+def main():
+            
     # 开始时实例对象没有传递参数
     new_dictionary = dictionary(sys.argv[1])
-    
     new_dictionary.query(sys.argv[1])
+        
+if __name__ == "__main__":
+    main()
  
     
     
