@@ -1,17 +1,18 @@
 # coding:utf-8
-# 自制词典
-# 1.存储单词释义
-# 2.查询
-# 3.添加n
-# 4.用SQLite 存储
+"""
+ 自制词典
+ 1.存储单词释义
+ 2.查询
+ 3.添加n
+ 4.用SQLite 存储
 
-''' self_dictionary
+self_dictionary
 
 This script allows user to look up English word and update the meaning
 
 This tool accept one word look up each time 
 
-'''
+"""
 
 
 import sys
