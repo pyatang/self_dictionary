@@ -7,7 +7,7 @@
 
 import sys
 import sqlite3
-
+import argparse
 # initial dictionary with 370101 english words with id
 
     
@@ -132,14 +132,27 @@ class dictionary:
             print("词库没有这个单词!")
             
         c.close()
-        
-        
-if __name__ == "__main__":
+
+def main():
+    parser = argparse.ArgumentParser(description="可以增加，删除，查询，修改的自制字典") 
+    parser.add_argument("-q", "--query",
+                        help="查询")
+    parser.add_argument("-d", "--delete",
+                        help="删除")
+    parser.add_argument("-u", "--update", 
+                        help="更改")
+    parser.add_argument("-a", "--add", 
+                        help="添加")
+    args = parser.parse_args()
+    query_word = args.query
+   
     # 开始时实例对象没有传递参数
-    new_dictionary = dictionary(sys.argv[1])
-    
-    new_dictionary.query(sys.argv[1])
- 
+    new_dictionary = dictionary(query_word)
+    new_dictionary.query(query_word)
+
+
+if __name__ == "__main__":
+    main() 
     
     
     
