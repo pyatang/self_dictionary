@@ -158,7 +158,6 @@ class dictionary:
         c.close()
 
 def main():
-<<<<<<< HEAD
             
     # 开始时实例对象没有传递参数
     new_dictionary = dictionary(sys.argv[1])
@@ -167,7 +166,6 @@ def main():
 if __name__ == "__main__":
     main()
  
-=======
     parser = argparse.ArgumentParser(description="可以增加，删除，查询，修改的自制字典") 
     parser.add_argument("-q", "--query",
                         help="查询")
