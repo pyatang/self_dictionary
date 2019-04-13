@@ -1,43 +1,20 @@
 # coding:utf-8
-"""
- 自制词典
- 1.存储单词释义
- 2.查询
- 3.添加n
- 4.用SQLite 存储
-
-self_dictionary
-
-This script allows user to look up English word and update the meaning
-
-This tool accept one word look up each time 
-
-"""
-
+# 自制词典
+# 1.存储单词释义
+# 2.查询
+# 3.添加n
+# 4.用SQLite 存储
 
 import sys
 import sqlite3
-
+import argparse
 # initial dictionary with 370101 english words with id
 
     
 alphabet = ['a', 'b', 'c', 'd', 'e', 'f', 'g', 'h', 'i', 'j', 'k', 'l', 'm', 'n','o', 'p', 'q', 'r', 's', 't', 'u', 'v', 'w', 'x', 'y', 'z', 'A', 'B', 'C', 'D', 'E', 'F', 'G', 'H', 'I', 'J', 'K', 'L', 'M', 'N', 'O', 'P', 'Q', 'R', 'S', 'T', 'U', 'V', 'W', 'X', 'Y', 'Z']
 
-
-def help_file():
-     
-    '''\n
-    Introduction to self_dictionary.py 
-    Use -h --help to open the this Help file
-    query function to look up and update definition when there is no definition.
-    '''
-    print('This help function.')
-
-
-
 # manipulate the dictionary which exist
 class dictionary:
-    ''' Dictionary docstring '''
     
     def __init__(self, word=None, Chinese_definition=None):
         self.word = word
@@ -116,7 +93,6 @@ class dictionary:
 
         
     def query(self, query_word):
-        
         conn = sqlite3.connect('atang_dictionary.db')
         c = conn.cursor()
         
@@ -132,7 +108,7 @@ class dictionary:
                 # get english definition
                 print("Enlish: {}".format(def_en))
                 print("中  文: {}".format(def_cn))
-        
+
                 # get Chinese definition                
                 
             elif def_en != '' and def_cn == '': 
@@ -158,14 +134,29 @@ class dictionary:
         c.close()
 
 def main():
-            
-    # 开始时实例对象没有传递参数
-    new_dictionary = dictionary(sys.argv[1])
-    new_dictionary.query(sys.argv[1])
-        
+    parser = argparse.ArgumentParser(description="可以增加，删除，查询，修改的自制字典") 
+    parser.add_argument("-q", "--query",
+                        help="查询")
+    parser.add_argument("-d", "--delete",
+                        help="删除")
+    parser.add_argument("-u", "--update", 
+                        help="更改")
+    parser.add_argument("-a", "--add", 
+                        help="添加")
+    if sys.argv[1] != '-q' and sys.argv[1] != '-h' and sys.argv[1] != '--help':
+        new_dictionary = dictionary(sys.argv[1])
+        new_dictionary.query(sys.argv[1])
+    else: 
+        args = parser.parse_args()
+        query_word = args.query
+   
+        # 开始时实例对象没有传递参数
+        new_dictionary = dictionary(query_word)
+        new_dictionary.query(query_word)
+
+
 if __name__ == "__main__":
-    main()
- 
+    main() 
     
     
     
