@@ -175,16 +175,12 @@ if __name__ == "__main__":
                         help="更改")
     parser.add_argument("-a", "--add", 
                         help="添加")
-    if sys.argv[1] != '-q' and sys.argv[1] != '-h' and sys.argv[1] != '--help':
-        new_dictionary = dictionary(sys.argv[1])
-        new_dictionary.query(sys.argv[1])
-    else: 
-        args = parser.parse_args()
-        query_word = args.query
+    args = parser.parse_args()
+    query_word = args.query
    
-        # 开始时实例对象没有传递参数
-        new_dictionary = dictionary(query_word)
-        new_dictionary.query(query_word)
+    # 开始时实例对象没有传递参数
+    new_dictionary = dictionary(query_word)
+    new_dictionary.query(query_word)
 
 
 if __name__ == "__main__":
